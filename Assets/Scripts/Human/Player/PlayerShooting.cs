@@ -4,14 +4,14 @@ using System.Collections;
 public class PlayerShooting : MonoBehaviour {
 
     public GameObject gunSpawnPoint;
-    public Gun gun;
+    public RangedWeapon gun;
     HumanHealth myHealth;
 
-    public delegate void OnPickedUpGunEvent(Gun e);
+    public delegate void OnPickedUpGunEvent(RangedWeapon e);
     public static event OnPickedUpGunEvent OnPickedUpGun;
 
     void Awake() {        
-        gun = GetComponentInChildren<Gun>();
+        gun = GetComponentInChildren<RangedWeapon>();
         myHealth = GetComponentInParent<HumanHealth>();        
         HumanHealth.OnHumanDied += HumanHealth_OnHumanDied;
         PlayerPhysicalMovement.OnCollidedWithSomething += PlayerPhysicalMovement_OnCollidedWithSomething;
@@ -30,7 +30,7 @@ public class PlayerShooting : MonoBehaviour {
             //GameObject bulletObject = GameObject.Instantiate(BulletPrefab, spawnPosition, GunBarrelEnd.transform.rotation) as GameObject;
             gunObject.transform.SetParent(gunSpawnPoint.transform);
 
-            gun = gunObject.GetComponent<Gun>(); // Нужно рассказывать UIcontroller о произошедших изменениях            
+            gun = gunObject.GetComponent<RangedWeapon>(); // Нужно рассказывать UIcontroller о произошедших изменениях            
             OnPickedUpGun(gun);
             GameObject.Destroy(crate.gameObject);
         }

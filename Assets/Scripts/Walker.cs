@@ -74,7 +74,7 @@ public class Walker : MonoBehaviour {
 
     public void GetTargetFromAnotherWalker(Walker walker) { // пока не дописано, задумано что зомби будут следовать друг за другом
         if (!SpottedSomething) {
-            Debug.Log(walker.agent.destination);
+            //Debug.Log(walker.agent.destination);
             agent.SetDestination(walker.agent.destination); 
         }               
     }

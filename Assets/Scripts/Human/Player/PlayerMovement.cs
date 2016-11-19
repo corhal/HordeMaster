@@ -2,7 +2,12 @@
 using System.Collections;
 
 public class PlayerMovement : MonoBehaviour {
-    
+    /*
+     * Скорее всего, этот скрипт был призван бороться с "заикающимися" физическими движениями. Он двигает
+     * визуальное тело игрока за физическим с отставанием.
+     * 
+     */
+
     public Transform target;
     public float smoothing = 5f;    
 

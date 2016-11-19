@@ -3,6 +3,10 @@ using System.Collections;
 
 public class PlayerPhysicalMovement : MonoBehaviour {
 
+	/*
+	 * Видимо, этот скрипт двигает физическое тело игрока. 
+	 */
+
     public float Speed;
     public float StepSoundDistance;
     public GameObject MyHuman;
@@ -31,7 +35,7 @@ public class PlayerPhysicalMovement : MonoBehaviour {
         float h = Input.GetAxisRaw("Horizontal");
         float v = Input.GetAxisRaw("Vertical");
 
-        Move(h, v);
+		Move(h, v);
         Turning();        
         //Animating(h, v);
     }

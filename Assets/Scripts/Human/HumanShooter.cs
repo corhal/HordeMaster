@@ -10,13 +10,13 @@ public class HumanShooter : MonoBehaviour {
     public HumanHealth myHealth;
 
     public bool SpottedSomething;
-    public Gun gun;   
+    public RangedWeapon gun;   
 
     public GameObject Target;
 
     void Awake() { // Вообще говоря, безоружный человек должен пытаться убежать        
         myHealth = GetComponentInParent<HumanHealth>();
-        gun = GetComponentInChildren<Gun>();        
+        gun = GetComponentInChildren<RangedWeapon>();        
         HumanHealth.OnHumanDied += HumanHealth_OnHumanDied;
         Walker.OnWalkerDied += Walker_OnWalkerDied;        
     }

@@ -10,7 +10,7 @@ public class UIcontroller : MonoBehaviour {
     public Text FoodLabel;
     public Text HealthLabel;
 
-    public Gun playersGun;    
+    public RangedWeapon playersGun;    
     HumanGunReloader playersReloader;
     HumanBackpack backpack;
     HumanHealth playerHealth;
@@ -24,22 +24,22 @@ public class UIcontroller : MonoBehaviour {
         HumanGunReloader.OnReloaded += HumanGunReloader_OnReloaded;
         PlayerShooting.OnPickedUpGun += PlayerShooting_OnPickedUpGun;
         playerHealth = Player.GetComponentInChildren<HumanHealth>();
-        playersGun = Player.GetComponentInChildren<Gun>();
+        playersGun = Player.GetComponentInChildren<RangedWeapon>();
         playersReloader = Player.GetComponentInChildren<HumanGunReloader>();
         backpack = Player.GetComponentInChildren<HumanBackpack>();
     }
 
-    void PlayerShooting_OnPickedUpGun(Gun e) {
+    void PlayerShooting_OnPickedUpGun(RangedWeapon e) {
         playersGun = e;
     }
 
-    void HumanGunReloader_OnStartedToReload(Gun e) {
+    void HumanGunReloader_OnStartedToReload(RangedWeapon e) {
         if (e == playersGun && ReloadLabel != null) { // проверка на магию
             ReloadLabel.text = "Reloading!";
         }
     }
 
-    void HumanGunReloader_OnReloaded(Gun e) {
+    void HumanGunReloader_OnReloaded(RangedWeapon e) {
         if (e == playersGun && ReloadLabel != null) {
             ReloadLabel.text = "";
         }

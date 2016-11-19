@@ -3,22 +3,22 @@ using System.Collections;
 
 public class HumanGunReloader : MonoBehaviour {
     
-    public Gun gun;
+    public RangedWeapon gun;
     public HumanBackpack backpack;
     
     public float reloadTime;
     //public int Ammo;
 
-    public delegate void OnStartedToReloadEvent(Gun e);
+    public delegate void OnStartedToReloadEvent(RangedWeapon e);
     public static event OnStartedToReloadEvent OnStartedToReload;
 
-    public delegate void OnReloadedEvent(Gun e);
+    public delegate void OnReloadedEvent(RangedWeapon e);
     public static event OnReloadedEvent OnReloaded;
    
     void Awake() {              
-        gun = GetComponentInChildren<Gun>();
+        gun = GetComponentInChildren<RangedWeapon>();
         backpack = GetComponentInChildren<HumanBackpack>();
-        Gun.OnGunClipDepleted += Gun_OnGunClipDepleted;
+        RangedWeapon.OnGunClipDepleted += Gun_OnGunClipDepleted;
         PlayerShooting.OnPickedUpGun += PlayerShooting_OnPickedUpGun;
         //PlayerPhysicalMovement.OnCollidedWithSomething += PlayerPhysicalMovement_OnCollidedWithSomething;
         HumanBackpack.OnReceivedAmmo += HumanBackpack_OnReceivedAmmo;
@@ -35,7 +35,7 @@ public class HumanGunReloader : MonoBehaviour {
             ManualReload();
     }
 
-    void PlayerShooting_OnPickedUpGun(Gun e) {
+    void PlayerShooting_OnPickedUpGun(RangedWeapon e) {
         if (GetComponentInParent<PlayerShooting>() != null) {
             gun = e;
         }        
@@ -43,14 +43,14 @@ public class HumanGunReloader : MonoBehaviour {
 
     public void ManualReload() {
         if (backpack.Ammo > 0) {
-            if (gun.gameObject.GetComponentInParent<PlayerMovement>() != null) {
+			if (gun != null && gun.gameObject.GetComponentInParent<PlayerMovement>() != null) {
                 OnStartedToReload(gun);
             }
             StartCoroutine(Reload());
         }
     }
 
-    void Gun_OnGunClipDepleted(Gun e) {
+    void Gun_OnGunClipDepleted(RangedWeapon e) {
         if (backpack.Ammo > 0 && e == gun) {
             if (gun.gameObject.GetComponentInParent<PlayerMovement>() != null) {
                 OnStartedToReload(gun); // каким-то невероятным образом пытается передать событие в другую сцену
