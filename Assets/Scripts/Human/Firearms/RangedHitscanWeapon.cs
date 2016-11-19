@@ -1,9 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+[RequireComponent(typeof(RangedWeapon))]
 public class RangedHitscanWeapon : MonoBehaviour, IShootable {
-
-	RangedWeapon gun;
+	
 	Ray shootRay;
 	RaycastHit shootHit;
 	int shootableMask;    
@@ -12,75 +12,48 @@ public class RangedHitscanWeapon : MonoBehaviour, IShootable {
 
 	void Awake() {
 	    shootableMask = LayerMask.GetMask("RealObjects");
-	    //gunParticles = GetComponent<ParticleSystem>();
 	    gunLine = GetComponentInChildren<LineRenderer>();
-	    //gunAudio = GetComponent<AudioSource>();     
-		gun = GetComponentInParent<RangedWeapon>();
-	    Walker.OnWalkerDied += Walker_OnWalkerDied;
-		RangedWeapon.OnDisableEffects += Gun_OnDisableEffects;
-	    //gun.OnGunShoot += Gun_OnGunShoot;
+	    Walker.OnWalkerDied += Walker_OnWalkerDied;   
 	}
 
 	public void Shoot(float inaccuracy, int shotsAtOnce, float range, int damagePerShot) {
-		gunLine.enabled = true;
-		gunLine.SetPosition (0, transform.position);
+		gunLine.SetVertexCount (shotsAtOnce * 2);
 
-		shootRay.origin = transform.position;
-		shootRay.direction = new Vector3 (transform.up.x + Random.Range (-inaccuracy, inaccuracy), transform.up.y, transform.up.z + Random.Range (-inaccuracy, inaccuracy));
-		if (Physics.Raycast (shootRay, out shootHit, range, shootableMask)) {
-			victim = shootHit.collider.gameObject;
-			Walker walker = victim.GetComponent<Walker> ();
-			if (walker != null) {				
-				walker.TakeDamage (damagePerShot, transform.position);
-			} else {
-				HumanHealth human = victim.GetComponent<HumanHealth> ();
-				if (human != null) {
-					human.TakeDamage (damagePerShot);
+		gunLine.enabled = true;
+
+		int j = 0;
+		for (int i = 0; i < shotsAtOnce; i++) {
+			gunLine.SetPosition (j, transform.position);
+			j++;
+			shootRay.origin = transform.position;
+			shootRay.direction = new Vector3 (transform.up.x + Random.Range (-inaccuracy, inaccuracy), transform.up.y, transform.up.z + Random.Range (-inaccuracy, inaccuracy));
+
+			if (Physics.Raycast (shootRay, out shootHit, range, shootableMask)) {
+				victim = shootHit.collider.gameObject;
+				Walker walker = victim.GetComponent<Walker> ();
+				if (walker != null) {				
+					walker.TakeDamage (damagePerShot, transform.position);
 				} else {
-					DoorHealth door = victim.GetComponent<DoorHealth> ();
-					if (door != null) {
-						door.TakeDamage (1);
+					HumanHealth human = victim.GetComponent<HumanHealth> ();
+					if (human != null) {
+						human.TakeDamage (damagePerShot);
+					} else {
+						DoorHealth door = victim.GetComponent<DoorHealth> ();
+						if (door != null) {
+							door.TakeDamage (1);
+						}
 					}
 				}
+				gunLine.SetPosition (j, shootHit.point);	
+			} else {
+				gunLine.SetPosition (j, shootRay.origin + shootRay.direction * range);
 			}
-			gunLine.SetPosition (1, shootHit.point);	
-		} else {
-			gunLine.SetPosition (1, shootRay.origin + shootRay.direction * range);
-		}	          
+			j++;
+		}
 	}
 
-	//void Gun_OnGunShoot(RangedWeapon e) {
-		/*gunLine.enabled = true;
-		gunLine.SetPosition (0, transform.position);
-
-		shootRay.origin = transform.position;
-		shootRay.direction = new Vector3 (transform.up.x + Random.Range (-gun.Inaccuracy, gun.Inaccuracy), transform.up.y, transform.up.z + Random.Range (-gun.Inaccuracy, gun.Inaccuracy));
-		if (Physics.Raycast (shootRay, out shootHit, gun.Range, shootableMask)) {
-			victim = shootHit.collider.gameObject;
-			Walker walker = victim.GetComponent<Walker> ();
-			if (walker != null) {				
-				walker.TakeDamage (gun.DamagePerShot, transform.position);
-			} else {
-				HumanHealth human = victim.GetComponent<HumanHealth> ();
-				if (human != null) {
-					human.TakeDamage (gun.DamagePerShot);
-				} else {
-					DoorHealth door = victim.GetComponent<DoorHealth> ();
-					if (door != null) {
-						door.TakeDamage (1);
-					}
-				}
-			}
-			gunLine.SetPosition (1, shootHit.point);	
-		} else {
-			gunLine.SetPosition (1, shootRay.origin + shootRay.direction * gun.Range);
-		}	*/          
-	//}
-
-	void Gun_OnDisableEffects(RangedWeapon e) {
-	    if (gun == e) {
-	        gunLine.enabled = false;
-	    }        
+	public void StopShooting() {
+		gunLine.enabled = false;
 	}
 
 	void Walker_OnWalkerDied(Walker e) {

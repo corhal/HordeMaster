@@ -21,19 +21,13 @@ public class RangedWeapon : MonoBehaviour {
     //ParticleSystem gunParticles;    
     //AudioSource gunAudio;
     Light gunLight;
-    float effectsDisplayTime = 0.2f;
+    public float EffectsDisplayTime;
 
-    public delegate void OnGunClipDepletedEvent(RangedWeapon e);
-    public static event OnGunClipDepletedEvent OnGunClipDepleted;
+    public delegate void WeaponClipDepletedEventHandler (RangedWeapon e);
+    public static event WeaponClipDepletedEventHandler OnWeaponClipDepleted;
 
-    /*public delegate void OnGunShootEvent(RangedWeapon e);
-    public event OnGunShootEvent OnGunShoot;*/
-
-    public delegate void OnGunShootSoundEvent(Vector3 position, float MaxSoundDistance);
-    public static event OnGunShootSoundEvent OnGunShootSound;
-
-    public delegate void OnDisableEffectsEvent(RangedWeapon e);
-    public static event OnDisableEffectsEvent OnDisableEffects;
+    public delegate void WeaponMakeSoundEventHandler (Vector3 position, float MaxSoundDistance);
+    public static event WeaponMakeSoundEventHandler OnWeaponMakeSound;
 
     void Awake() {        // когда игрок движется, линия рисуется не из ствола(
         //gunParticles = GetComponent<ParticleSystem>();        
@@ -50,7 +44,7 @@ public class RangedWeapon : MonoBehaviour {
             Shoot();
         }
 
-        if (timer >= TimeBetweenBullets * effectsDisplayTime) {
+		if (timer >= TimeBetweenBullets * EffectsDisplayTime) {
             DisableEffects();
         }
     }
@@ -68,7 +62,7 @@ public class RangedWeapon : MonoBehaviour {
     }
 
     public void DisableEffects() {
-        OnDisableEffects(this);
+		shootable.StopShooting ();
         gunLight.enabled = false;
     }
     
@@ -77,7 +71,7 @@ public class RangedWeapon : MonoBehaviour {
         CurrentClipSize--;
 
         if (CurrentClipSize == 0) {
-            OnGunClipDepleted(this);
+            OnWeaponClipDepleted(this);
         }
 
         //gunAudio.Play();
@@ -89,8 +83,7 @@ public class RangedWeapon : MonoBehaviour {
 
 		shootable.Shoot (Inaccuracy, ShotsAtOnce, Range, DamagePerShot);
 
-        //OnGunShoot(this);
-        OnGunShootSound(transform.position, gunSoundDistance);
+        OnWeaponMakeSound(transform.position, gunSoundDistance);
     }
 
     void OnDestroy() {

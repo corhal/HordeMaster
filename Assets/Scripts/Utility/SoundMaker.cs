@@ -8,7 +8,7 @@ public class SoundMaker : MonoBehaviour {
 
 	void Awake () {        
         PlayerPhysicalMovement.OnHumanStepSound += PlayerPhysicalMovement_OnHumanStepSound;
-        RangedWeapon.OnGunShootSound += Gun_OnGunShootSound;
+        RangedWeapon.OnWeaponMakeSound += Gun_OnGunShootSound;
         SoundMaker.OnMakeSound += SoundMaker_OnMakeSound;
         Alarm.OnAlarmSound += Alarm_OnAlarmSound;
 	}

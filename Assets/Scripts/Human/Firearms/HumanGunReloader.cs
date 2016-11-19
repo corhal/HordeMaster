@@ -18,7 +18,7 @@ public class HumanGunReloader : MonoBehaviour {
     void Awake() {              
         gun = GetComponentInChildren<RangedWeapon>();
         backpack = GetComponentInChildren<HumanBackpack>();
-        RangedWeapon.OnGunClipDepleted += Gun_OnGunClipDepleted;
+        RangedWeapon.OnWeaponClipDepleted += Gun_OnGunClipDepleted;
         PlayerShooting.OnPickedUpGun += PlayerShooting_OnPickedUpGun;
         //PlayerPhysicalMovement.OnCollidedWithSomething += PlayerPhysicalMovement_OnCollidedWithSomething;
         HumanBackpack.OnReceivedAmmo += HumanBackpack_OnReceivedAmmo;
